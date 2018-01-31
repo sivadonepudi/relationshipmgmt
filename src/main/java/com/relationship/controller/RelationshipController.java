@@ -3,6 +3,7 @@
  */
 package com.relationship.controller;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
@@ -36,6 +37,8 @@ public class RelationshipController {
 
 	@Autowired
 	RelationshipService relationshipService;
+	
+	private Set<Error> errors = new LinkedHashSet<Error>();
 
 	@PUT
 	@RequestMapping("/connect")

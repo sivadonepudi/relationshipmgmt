@@ -17,12 +17,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({ "com.relationship.controller", "com.relationship.service" })
 @EnableJpaRepositories("com.relationship.repository")
 @EntityScan("com.relationship.model")
-public class RelationshipManagementApp {
+public class RelationshipMgmtApp {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(RelationshipManagementApp.class, args);
+		SpringApplication.run(RelationshipMgmtApp.class, args);
 	}
 }
