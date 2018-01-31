@@ -10,6 +10,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.relationship.exception.UserNotFoundException;
 import com.relationship.main.RelationshipStatus;
 import com.relationship.model.Relationship;
 import com.relationship.model.RelationshipKey;
@@ -54,16 +55,19 @@ public class RelationshipService {
 		return user;
 	}
 
-	public Set<String> mutualRelations(String userEmail, String friendEmail) {
+	public Set<String> mutualRelations(String userEmail, String friendEmail) throws UserNotFoundException {
 		Set<String> userFriends = retrieveFriends(userEmail, RelationshipStatus.FRIEND);
 		Set<String> friendFriends = retrieveFriends(friendEmail, RelationshipStatus.FRIEND);
 		userFriends.retainAll(friendFriends);
 		return userFriends;
 	}
 
-	public Set<String> retrieveFriends(String email, RelationshipStatus relationshipStatus) {
+	public Set<String> retrieveFriends(String email, RelationshipStatus relationshipStatus) throws UserNotFoundException {
 		Set<String> friends = new HashSet<String>();
 		User user = userRepository.findByEmail(email);
+		if(user == null) {
+			throw new UserNotFoundException(new Error(email + " doesn't exists."));
+		}
 		List<Relationship> relations = user.getRelationships();
 		for (Relationship relation : relations) {
 			if (relationshipStatus.equals(relation.getRelationshipStatus())) {

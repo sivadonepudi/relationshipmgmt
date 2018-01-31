@@ -3,7 +3,6 @@
  */
 package com.relationship.controller;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.relationship.exception.UserNotFoundException;
 import com.relationship.io.Friends;
 import com.relationship.io.RelationshipRequest;
 import com.relationship.io.RelationshipResponse;
@@ -37,8 +37,6 @@ public class RelationshipController {
 
 	@Autowired
 	RelationshipService relationshipService;
-	
-	private Set<Error> errors = new LinkedHashSet<Error>();
 
 	@PUT
 	@RequestMapping("/connect")
@@ -70,20 +68,31 @@ public class RelationshipController {
 	@PUT
 	@RequestMapping("/common")
 	public Response commonRelations(@RequestBody RelationshipRequest request) {
-		Set<String> mutualRelations = relationshipService.mutualRelations(request.getFriends().get(0),
-				request.getFriends().get(1));
-		Friends response = new Friends(true);
-		response.setFriends(mutualRelations);
-		return Response.ok(response).build();
+		try {
+			Set<String> mutualRelations = relationshipService.mutualRelations(request.getFriends().get(0),
+					request.getFriends().get(1));
+			Friends response = new Friends(true);
+			response.setFriends(mutualRelations);
+			return Response.ok(response).build();
+		} catch (UserNotFoundException e) {
+			return Response.serverError().build();
+		}
+
 	}
 
 	@GET
 	@RequestMapping("/{email}")
 	public Response getFriends(@PathVariable String email) {
-		Set<String> friends = relationshipService.retrieveFriends(email, RelationshipStatus.FRIEND);
-		Friends response = new Friends(true);
-		response.setFriends(friends);
-		return Response.ok(response).build();
+		Set<String> friends;
+		try {
+			friends = relationshipService.retrieveFriends(email, RelationshipStatus.FRIEND);
+			Friends response = new Friends(true);
+			response.setFriends(friends);
+			return Response.ok(response).build();
+		} catch (UserNotFoundException e) {
+			return Response.serverError().build();
+		}
+
 	}
 
 }
