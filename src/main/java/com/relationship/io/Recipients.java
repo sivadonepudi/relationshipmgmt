@@ -20,6 +20,7 @@ public class Recipients extends RelationshipResponse {
 		super(status);
 	}
 
+	@JsonProperty
 	public Set<String> getRecipients() {
 		return recipients;
 	}

@@ -8,21 +8,11 @@ package com.relationship.io;
  *
  */
 public class ErrorResponse {
-	private Error errorCode;
 	private String errorMessage;
 
-	public ErrorResponse(Error errorCode, String errorMessage) {
+	public ErrorResponse(String errorMessage) {
 		super();
-		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
-	}
-
-	public Error getErrorCode() {
-		return errorCode;
-	}
-
-	public void setErrorCode(Error errorCode) {
-		this.errorCode = errorCode;
 	}
 
 	public String getErrorMessage() {

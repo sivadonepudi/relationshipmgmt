@@ -40,59 +40,48 @@ public class RelationshipController {
 
 	@PUT
 	@RequestMapping("/connect")
-	public Response addRelations(@RequestBody RelationshipRequest request) {
+	public RelationshipResponse addRelations(@RequestBody RelationshipRequest request) {
 		relationshipService.buildRelationship(request.getFriends().get(0), request.getFriends().get(1),
 				RelationshipStatus.FRIEND);
 		RelationshipResponse response = new RelationshipResponse(true);
-		return Response.ok(response).build();
+		return response;
 	}
 
 	@PUT
 	@RequestMapping("/disconnect")
-	public Response releaseRelations(@RequestBody RelationshipRequest request) {
+	public RelationshipResponse releaseRelations(@RequestBody RelationshipRequest request) {
 		relationshipService.buildRelationship(request.getFriends().get(0), request.getFriends().get(1),
 				RelationshipStatus.UNFRIEND);
 		RelationshipResponse response = new RelationshipResponse(true);
-		return Response.ok(response).build();
+		return response;
 	}
 
 	@PUT
 	@RequestMapping("/block")
-	public Response blockRelations(@RequestBody RelationshipRequest request) {
+	public RelationshipResponse blockRelations(@RequestBody RelationshipRequest request) {
 		relationshipService.buildRelationship(request.getFriends().get(0), request.getFriends().get(1),
 				RelationshipStatus.BLOCK);
 		RelationshipResponse response = new RelationshipResponse(true);
-		return Response.ok(response).build();
+		return response;
 	}
 
 	@PUT
 	@RequestMapping("/common")
-	public Response commonRelations(@RequestBody RelationshipRequest request) {
-		try {
-			Set<String> mutualRelations = relationshipService.mutualRelations(request.getFriends().get(0),
-					request.getFriends().get(1));
-			Friends response = new Friends(true);
-			response.setFriends(mutualRelations);
-			return Response.ok(response).build();
-		} catch (UserNotFoundException e) {
-			return Response.serverError().build();
-		}
-
+	public Friends commonRelations(@RequestBody RelationshipRequest request) throws UserNotFoundException {
+		Set<String> mutualRelations = relationshipService.mutualRelations(request.getFriends().get(0),
+				request.getFriends().get(1));
+		Friends response = new Friends(true);
+		response.setFriends(mutualRelations);
+		return response;
 	}
 
 	@GET
 	@RequestMapping("/{email}")
-	public Response getFriends(@PathVariable String email) {
+	public Response getFriends(@PathVariable String email) throws UserNotFoundException {
 		Set<String> friends;
-		try {
-			friends = relationshipService.retrieveFriends(email, RelationshipStatus.FRIEND);
-			Friends response = new Friends(true);
-			response.setFriends(friends);
-			return Response.ok(response).build();
-		} catch (UserNotFoundException e) {
-			return Response.serverError().build();
-		}
-
+		friends = relationshipService.retrieveFriends(email, RelationshipStatus.FRIEND);
+		Friends response = new Friends(true);
+		response.setFriends(friends);
+		return Response.ok(response).build();
 	}
-
 }

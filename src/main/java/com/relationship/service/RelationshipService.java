@@ -43,6 +43,15 @@ public class RelationshipService {
 		relationship.setRelationshipKey(relationshipKey);
 		relationship.setRelationshipStatus(status);
 		relationshipRepository.save(relationship);
+		
+		RelationshipKey relationshipKey2 = new RelationshipKey();
+		relationshipKey2.setUserId(friend.getUserId());
+		relationshipKey2.setFriendId(user.getUserId());
+		
+		Relationship relationship2 = new Relationship();
+		relationship2.setRelationshipKey(relationshipKey2);
+		relationship2.setRelationshipStatus(status);
+		relationshipRepository.save(relationship2);
 	}
 
 	private User persistUser(String email) {
